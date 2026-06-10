@@ -1,0 +1,18 @@
+server:
+  port: 8888
+  servlet:
+    context-path: /admin
+  tomcat:
+    threads:
+      max: 200       # 建议为 CPU核心数 * 4
+      min-spare: 20  # 最小空闲线程
+
+
+spring:
+  profiles:
+    active: @env@
+  main:
+    allow-circular-references: true  # 解决循环依赖问题，官方不推荐
+  output:
+    ansi:
+      enabled: always # 彩色日志，可去掉

@@ -1,0 +1,19 @@
+services:
+  z-admin:
+    build: ..
+    image: z-admin:0.0.1
+    container_name: z-admin
+    ports:
+      - "8888:8888"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - DATASOURCE_HOST=host.docker.internal
+      - DATASOURCE_PORT=3306
+      - DATASOURCE_DBNAME=z_admin
+      - DATASOURCE_USERNAME=root
+      - DATASOURCE_PASSWORD=root
+      - REDIS_HOST=host.docker.internal
+      - REDIS_PORT=6379
+    volumes:
+      - ./logs:/app/logs
+    restart: always

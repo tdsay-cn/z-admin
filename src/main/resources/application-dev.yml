@@ -1,0 +1,55 @@
+spring:
+  datasource:
+    hikari:
+      # 数据库最大连接数， MySQL 5.7/8.0 版本最大连接数默认是 151。
+      # 单体应用这个值可以调大一些，多服务需要根据服务器数量和数据库情况进行调整
+      maximum-pool-size: 50
+      # 固定池大小，建议y与maximum-pool-size保持一致
+      minimum-idle: 50
+      # 数据库超时时间
+      connection-timeout: 30000
+      max-lifetime: 1800000                 # 连接最大存活时间（毫秒），
+      leak-detection-threshold: 60000       # 连接泄漏检测阈值（毫秒）
+    dynamic:
+      primary: master
+      strict: false
+      datasource:
+        master:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:${DATASOURCE_DB-TYPE:mysql}://${DATASOURCE_HOST:localhost}:${DATASOURCE_PORT:3306}/${DATASOURCE_DBNAME:z_admin}?characterEncoding=UTF-8&useUnicode=true&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true
+          username: ${DATASOURCE_USERNAME:root}
+          password: ${DATASOURCE_PASSWORD:root}
+        slave_1:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:${DATASOURCE_DB-TYPE:mysql}://${DATASOURCE_HOST:localhost}:${DATASOURCE_PORT:3306}/${DATASOURCE_DBNAME:z_admin_slave_1}?characterEncoding=UTF-8&useUnicode=true&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true
+          username: ${DATASOURCE_USERNAME:root}
+          password: ${DATASOURCE_PASSWORD:root}
+        slave_2:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:${DATASOURCE_DB-TYPE:mysql}://${DATASOURCE_HOST:localhost}:${DATASOURCE_PORT:3306}/${DATASOURCE_DBNAME:z_admin_slave_2}?characterEncoding=UTF-8&useUnicode=true&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true
+          username: ${DATASOURCE_USERNAME:root}
+          password: ${DATASOURCE_PASSWORD:root}
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      database: 0
+      # 不使用redisRepository，如需使用，去掉该配置，默认为true（主要为解决服务启动时有几条日志，有亿点点强迫症 = =！）
+      repositories:
+        enabled: false
+
+mybatis-plus:
+  # 配置mapper.xml扫描路径
+  mapper-locations: classpath*:mybatis/**/*.xml
+  # 配置在mapper.xml中的参数类型(resultMap的type、parameterType、resultType等)可以不写全类名 com.z.admin.entity.po.CfgUser -> CfgUser
+  type-aliases-package: com.z.admin.entity.po
+  configuration:
+    # 配置输出sql语句
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # 配置不输出sql语句
+#    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+  global-config:
+    db-config:
+      logic-delete-field: deleted #需要配置的逻辑删除数据库字段
+      logic-delete-value: 1   #配置逻辑删除字段为1是删除
+      logic-not-delete-value: 0  #配置逻辑删除字段为0是未删除
